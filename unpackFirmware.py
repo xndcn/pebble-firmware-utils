@@ -2,8 +2,9 @@
 
 import zipfile, zlib
 import os, sys, io
-import struct, json
+import json
 from libpebble.stm32_crc import crc32
+from struct import pack, unpack
 
 
 def mkdir(path):
@@ -23,7 +24,7 @@ def extract_content(pbz, content, output_dir):
 		print "\t" + str(content['crc']) + " ,should be " + str(crc32(data))
 
 def extract_resources(pbpack, resourceMap, output_dir):
-	numbers = struct.unpack('B', pbpack.read(1))[0]
+	numbers = unpack('B', pbpack.read(1))[0]
 	print 'Find %d resources.' % numbers
 
 	pbpack.seek(4)
@@ -40,11 +41,11 @@ def extract_resources(pbpack, resourceMap, output_dir):
 	resources = {}
 	for i in range(numbers):
 		pbpack.seek(0x1C + i * 16)
-		index = struct.unpack('i', pbpack.read(4))[0] - 1
+		index = unpack('i', pbpack.read(4))[0] - 1
 		resources[index] = {
-			'offset': struct.unpack('i', pbpack.read(4))[0],
-			'size': struct.unpack('i', pbpack.read(4))[0],
-			'crc': struct.unpack('I', pbpack.read(4))[0]
+			'offset': unpack('i', pbpack.read(4))[0],
+			'size': unpack('i', pbpack.read(4))[0],
+			'crc': unpack('I', pbpack.read(4))[0]
 		}
 
 	for i in range(len(resourceMap)):
