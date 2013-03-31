@@ -27,12 +27,22 @@ if __name__ == "__main__":
         log.warn('Did not download "%s" because it would overwrite an existing file' % fwfile)
         exit()
     with open(fwfile, "wb") as f:
+        download = urlopen(firmware);
+        length = int(download.headers["Content-Length"])
         log.info("Downloading %s -> %s" % (firmware, fwfile))
-        f.write(urlopen(firmware).read())
+
+        downloaded = 0
+
+        while downloaded < length:
+            data = download.read(1024*50)
+            f.write(data)
+            downloaded += len(data) 
+            log.info("Downloaded %.1f%%" % (downloaded * 100.0 / length))
     
     f = open(fwfile, "rb")
     filesha = hashlib.sha256()
     filesha.update(f.read())
     if(filesha.hexdigest() != sha):
         log.error('File download errer: SHA-256 hash mismatch. Please retry.')
-    
+    else:
+		log.info('File download done.')
