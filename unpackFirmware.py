@@ -39,16 +39,16 @@ def extract_resources(pbpack, resourceMap, output_dir):
 		path = resourceMap[i]['file']
 		dirname = os.path.dirname(path)
 
-		print 'Extracting %s...' % path
+		print 'Extracting %s...' % (dirname + "/" + resourceMap[i]['defName'])
 		mkdir(output_dir + dirname)
 
 		entry = resources[i]
 		pbpack.seek(0x101C + entry['offset'])
-		file = open(output_dir + path, 'wb')
+		file = open(output_dir + dirname + "/" + resourceMap[i]['defName'], 'wb')
 		file.write(pbpack.read(entry['size']))
 		file.close()
 
-		data = io.FileIO(output_dir + path).readall()
+		data = io.FileIO(output_dir + dirname + "/" + resourceMap[i]['defName']).readall()
 		if crc32(data) == entry['crc']:
 			print '\t[  OK] Checking CRC...'
 		else:
