@@ -17,11 +17,12 @@ def extract_content(pbz, content, output_dir):
 	print 'Extracting %s...' % content['name']
 	pbz.extract(content['name'], output_dir)
 	data = io.FileIO(output_dir + content['name']).readall()
-	if crc32(data) == content['crc']:
+	crc = crc32(data)
+	if crc == content['crc']:
 		print '\t[  OK] Checking CRC...'
 	else:
 		print '\t[Fail] Checking CRC...'
-		print "\t" + str(content['crc']) + " ,should be " + str(crc32(data))
+		print "\tIt's %d, but should be %d" % (content['crc'], crc)
 
 def extract_resources(pbpack, resourceMap, output_dir):
 	numbers = unpack('B', pbpack.read(1))[0]
@@ -36,7 +37,7 @@ def extract_resources(pbpack, resourceMap, output_dir):
 		print "\t[  OK] Check Resources CRC"
 	else:
 		print "\t[Fail] Check Resources CRC"
-		print "\t" + str(hex(unpack('>I', pack('<I', crc_from_json))[0])) + " ,should be " + str(hex(unpack('>I', pack('<I', crc_resource))[0]))
+		print "\tIt's 0x%x, but should be 0x%x" % (crc_from_json, crc_resource)
 	
 	resources = {}
 	for i in range(numbers):
@@ -62,11 +63,12 @@ def extract_resources(pbpack, resourceMap, output_dir):
 		file.close()
 
 		data = io.FileIO(output_dir + dirname + "/" + resourceMap[i]['defName']).readall()
-		if crc32(data) == entry['crc']:
+		crc = crc32(data)
+		if crc == entry['crc']:
 			print '\t[  OK] Checking CRC...'
 		else:
 			print '\t[Fail] Checking CRC...'
-			print "\t" + str(hex(unpack('>I', pack('<I', entry['crc']))[0])) + " ,should be " + str(hex(unpack('>I', pack('<I', crc32(data)))[0]))	
+			print "\tIt's 0x%x, but should be 0x%x" % (entry['crc'], crc)
 		
 
 if __name__ == '__main__':
