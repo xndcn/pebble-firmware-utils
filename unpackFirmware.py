@@ -66,11 +66,12 @@ def extract_resources(pbpack, resourceMap, output_dir):
 			'crc': unpack('I', pbpack.read(4))[0]
 		}
 
-	for i in range(len(resourceMap or resources)):
+	for i in range(len(resources)):
 		entry = resources[i]
-		path = resourceMap[i]['file'] if resourceMap else 'res/%02d_%08X' % (i, entry['crc'])
+		hasRM = resourceMap and i < len(resourceMap)
+		path = resourceMap[i]['file'] if hasRM else 'res/%02d_%08X' % (i, entry['crc'])
 		dirname = os.path.dirname(path)
-		filepath = "/".join((dirname, resourceMap[i]['defName'])) if resourceMap else path
+		filepath = "/".join((dirname, resourceMap[i]['defName'])) if hasRM else path
 
 		print 'Extracting %s...' % filepath
 		mkdir(output_dir + dirname)
@@ -133,7 +134,7 @@ if __name__ == '__main__':
 		resources = manifest['resources']
 		extract_content(pbz, resources, output_dir)	
 		
-		if manifest['debug'].has_key('resourceMap'):
+		if 'resourceMap' in manifest['debug']:
 			resourceMap = manifest['debug']['resourceMap']['media']	
 			print 'Found resource map in manifest. Looks like 1.x firmware.'
 			if useNaming:
