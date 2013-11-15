@@ -3,7 +3,7 @@
 import sys
 from libpebble.stm32_crc import crc32
 
-if len(sys.argv) <= 1 or sysv.argv[1] == '-h':
+if len(sys.argv) <= 1 or sys.argv[1] == '-h':
 	print 'calculateCrc.py calculates STM32 CRC sum for a given file or stdin'
 	print 'Usage: calculateCrc.py filename'
 	print 'Use `-\' as filename to read from stdin.'
