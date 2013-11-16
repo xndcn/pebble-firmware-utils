@@ -108,6 +108,9 @@ if __name__ == "__main__":
 		exit(1)
 	
 	print " # Creating symlink..."
-	os.symlink("app/build/app_resources.pbpack", "../system_resources.new.pbpack")
+	if os.path.exists("../system_resources.new.pbpack"):
+		print "Already exists."
+	else:
+		os.symlink("app/build/app_resources.pbpack", "../system_resources.new.pbpack")
 	print " # Done! You may get pbpack at system_resources.new.pbpack"
 	print "   Also you may rebuild it with:  cd app; ./waf build"
