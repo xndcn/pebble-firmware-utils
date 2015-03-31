@@ -1,4 +1,6 @@
 #Pebble Firmware Utils#
+[Pebble Language Pack File Analyse](../for-language-pack/LANGUAGE.md)
+
 Some tools used for Pebble firmware, now include:
 
 ##pbpack_tool.py##
