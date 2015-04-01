@@ -38,7 +38,7 @@ However, I didn't find any font file from `Language Pack File` except `Chinese`
 
 In Chinese pbl, there are `4` types font file. 
   
-  >`001` and `002` are identical, which contains only `217` characters and their maximum height is 14.
+  >`001` and `002` are identical, which contains only `217` characters and their maximum height is 14. Especially, it nearly contains all chinese characters in `000.po`.
   
   >`003` and `004` are identical, which contains `9056` characters and their maximum height is 18.
   
