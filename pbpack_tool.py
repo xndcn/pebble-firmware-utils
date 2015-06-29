@@ -2,6 +2,7 @@
 
 import argparse, os
 import sys
+import inspect
 
 if 'PEBBLE_SDK_PATH' not in os.environ:
     print 'Please set pebble sdk path environment variable firstly!'
@@ -10,7 +11,17 @@ if 'PEBBLE_SDK_PATH' not in os.environ:
 
 sys.path.append(os.path.join(os.environ['PEBBLE_SDK_PATH'], 
                 'Pebble/common/tools'))
+import pbpack
 from pbpack import ResourcePack
+
+def fix_ResourcePack_bug():
+    spec = inspect.getargspec(ResourcePack.__init__)
+    if 'is_system' in spec.args:
+        origin_init = ResourcePack.__init__
+        def hacked_init(self):
+            origin_init(self, is_system=False)
+        ResourcePack.__init__ = hacked_init
+        pbpack.self = ResourcePack()
 
 def makedirs(directory):
     try:
@@ -19,6 +30,7 @@ def makedirs(directory):
         pass
 
 def cmd_unpack(args):
+    fix_ResourcePack_bug()
     with open(args.pack_file, 'rb') as pack_file:
         pack = ResourcePack.deserialize(pack_file)
         makedirs(args.output_directory)
@@ -27,7 +39,7 @@ def cmd_unpack(args):
                 content_file.write(pack.contents[i])
 
 def cmd_pack(args):
-    pack = ResourcePack()
+    pack = ResourcePack(is_system=False)
     for f in args.pack_file_list:
         pack.add_resource(open(f, 'rb').read())
     with open(args.pack_file, 'wb') as pack_file:
