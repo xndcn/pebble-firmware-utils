@@ -51,6 +51,7 @@ def extract_codepoints(font):
     side = int(math.sqrt(numbers))
     if side*side < numbers:
         side += 1
+    side += 1
     bitmap = Image.new('RGB', (side*gap, side*gap), 'white')
 
     count = 0
