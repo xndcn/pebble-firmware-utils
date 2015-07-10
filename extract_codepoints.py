@@ -73,7 +73,8 @@ def extract_codepoints(font):
                     off = x+y*width
                     bit = ord(data[off/8]) & (0x01 << (off%8))
                     if bit > 0:
-                        bitmap.putpixel((count/side*gap+x+left, count%side*gap+y+top), (0,0,0))
+                        if count/side*gap+x+left > 0 and count%side*gap+y+top > 0:
+                            bitmap.putpixel((count/side*gap+x+left, count%side*gap+y+top), (0,0,0))
 
             count += 1
 
