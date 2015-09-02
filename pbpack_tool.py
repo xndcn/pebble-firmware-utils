@@ -30,7 +30,6 @@ def makedirs(directory):
         pass
 
 def cmd_unpack(args):
-    fix_ResourcePack_bug()
     with open(args.pack_file, 'rb') as pack_file:
         pack = ResourcePack.deserialize(pack_file)
         makedirs(args.output_directory)
@@ -39,7 +38,7 @@ def cmd_unpack(args):
                 content_file.write(pack.contents[i])
 
 def cmd_pack(args):
-    pack = ResourcePack(is_system=False)
+    pack = ResourcePack()
     for f in args.pack_file_list:
         pack.add_resource(open(f, 'rb').read())
     with open(args.pack_file, 'wb') as pack_file:
@@ -70,4 +69,5 @@ def main():
     args.func(args)
 
 if __name__ == "__main__":
+    fix_ResourcePack_bug()
     main()
