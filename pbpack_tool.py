@@ -14,12 +14,12 @@ sys.path.append(os.path.join(os.environ['PEBBLE_SDK_PATH'],
 import pbpack
 from pbpack import ResourcePack
 
-def fix_ResourcePack_bug():
+def fix_ResourcePack_bug(system):
     spec = inspect.getargspec(ResourcePack.__init__)
     if 'is_system' in spec.args:
         origin_init = ResourcePack.__init__
-        def hacked_init(self, is_system=False):
-            origin_init(self, is_system)
+        def hacked_init(self, is_system=system):
+            origin_init(self, system)
         ResourcePack.__init__ = hacked_init
         pbpack.self = ResourcePack()
 
@@ -44,9 +44,11 @@ def cmd_pack(args):
     with open(args.pack_file, 'wb') as pack_file:
         pack.serialize(pack_file)
 
-def main():
+def parse_args():
     parser = argparse.ArgumentParser(description="Pack and Unpack"
                                                  "pbpack file")
+    parser.add_argument("--system", action="store_true",
+                        help="whether the pbpack file is system or not")
     subparsers = parser.add_subparsers(help="commands", dest='which')
 
     unpack_parser = subparsers.add_parser('unpack',
@@ -66,8 +68,9 @@ def main():
     pack_parser.set_defaults(func=cmd_pack)
 
     args = parser.parse_args()
-    args.func(args)
+    return args
 
 if __name__ == "__main__":
-    fix_ResourcePack_bug()
-    main()
+    args = parse_args()
+    fix_ResourcePack_bug(args.system)
+    args.func(args)
