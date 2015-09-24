@@ -18,8 +18,8 @@ def fix_ResourcePack_bug():
     spec = inspect.getargspec(ResourcePack.__init__)
     if 'is_system' in spec.args:
         origin_init = ResourcePack.__init__
-        def hacked_init(self):
-            origin_init(self, is_system=False)
+        def hacked_init(self, is_system=False):
+            origin_init(self, is_system)
         ResourcePack.__init__ = hacked_init
         pbpack.self = ResourcePack()
 
